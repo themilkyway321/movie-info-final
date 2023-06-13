@@ -1,17 +1,17 @@
 import { useQuery } from "react-query";
-import { IMovieDetail, getPopular, makeImagePath } from "../api";
-import { useEffect } from "react";
+import { IMovieDetail, getPopular } from "../api";
+
 
 function Home(){
-  const {isLoading, data}= useQuery("allMovies",getPopular);
-  // const image_URL = useQuery("image",()=>makeImagePath(image))
-
+  const {isLoading, data: movieData}= useQuery("allMovies", getPopular);
   return(
     <div>
       {isLoading? <p>"loading..."</p>:(
-      <div> {data?.results.map((v:any) =>(
-      <p key={v.id}>{v.title}</p>
-      
+      <div> {movieData?.results.map((v:IMovieDetail) =>(
+      <div>
+        <p key={v.id}>{v.title}</p>
+        <img src={`https://image.tmdb.org/t/p/w500${v.backdrop_path}`} />
+      </div>
       ))}</div> 
       )}
     </div>
