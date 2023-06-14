@@ -16,6 +16,13 @@ export const router = createBrowserRouter([
         path:"",
         element:<Home />,
         errorElement:<ErrorComponent />,
+        children:[
+          {
+            path:"detail",
+            element:<Modal  />,
+            errorElement:<ErrorComponent />,
+          },
+        ],
       },
       {
         path:"coming-soon",
@@ -27,11 +34,7 @@ export const router = createBrowserRouter([
         element:<Playing />,
         errorElement:<ErrorComponent />,
       },
-      {
-        path:"detail",
-        element:<Modal />,
-        errorElement:<ErrorComponent />,
-      },
+      
     ],
     errorElement:<NotFound />,
   }

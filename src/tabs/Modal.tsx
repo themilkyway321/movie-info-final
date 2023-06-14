@@ -2,17 +2,21 @@ import { useQuery } from "react-query";
 import { IMovieDetail, getMovie } from "../api";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
+interface Id {
+  id: string;
+};
 function Modal(){
-  const { id } = useParams();
-  const {isLoading: detailLoading, data: movieDetail}= useQuery<IMovieDetail>("id", () => getMovie("id"));
+  
+  const {isLoading, data}= useQuery("id", () => getMovie(id));
+  console.log(data)
   return (
 <div>
 <p>hello</p>
-  {detailLoading? <p>"loading.."</p>:(
+  {isLoading? <p>"loading.."</p>:(
         <div>
-          {movieDetail?.revenue}
+          {/* {data?.map((e:IMovieDetail)=>e.revenue)} */}
         </div>
       )}
 </div>
