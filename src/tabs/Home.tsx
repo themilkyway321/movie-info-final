@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { IMovieDetail, getPopular, getMovie } from "../api";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
 
 const Body = styled.section`
@@ -54,7 +54,7 @@ interface IdParams {
 function Home(){
   
   const {isLoading :movieLoading, data: movieData}= useQuery("allMovies", getPopular);
- 
+  const location = useLocation();
   const [clicked, setClicked]=useState(false)
   const toggleClick =()=>setClicked((prev)=>!prev)
   return(
@@ -63,13 +63,15 @@ function Home(){
       <Container> 
         {movieData?.results.map((v:IMovieDetail) =>(
       <Item>
-        <Link to={"/detail"} state={{ name:v.id }} onClick={toggleClick}><img src={`https://image.tmdb.org/t/p/w500${v.backdrop_path}`} /></Link>
+        <Link to={`/detail/${v.id}`}  onClick={toggleClick}><img src={`https://image.tmdb.org/t/p/w500${v.backdrop_path}`} /></Link>
         <p key={v.id}>{v.title}</p>
       </Item>
       ))}
       </Container> 
       )}
-     <Outlet />
+     
+        <Outlet />
+     
     </Body>
   );
 }

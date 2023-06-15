@@ -8,17 +8,18 @@ interface Id {
   id: string;
 };
 function Modal(){
-  
-  const {isLoading, data}= useQuery("id", () => getMovie(id));
-  console.log(data)
+  const location = useLocation();
+  const  {id}  = useParams();
+  // const {isLoading, data}= useQuery(['detail', id], () => getMovie(id));
+ 
   return (
 <div>
 <p>hello</p>
-  {isLoading? <p>"loading.."</p>:(
+  {/* {isLoading? <p>"loading.."</p>:(
         <div>
-          {/* {data?.map((e:IMovieDetail)=>e.revenue)} */}
+          {data?.map((e:IMovieDetail)=>e.revenue)}
         </div>
-      )}
+      )} */}
 </div>
   );
 }

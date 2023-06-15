@@ -1,5 +1,5 @@
 import App from "./App";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, useLocation } from "react-router-dom";
 import Home from "./tabs/Home";
 import ErrorComponent from "./components/ErrorComponent";
 import Soon from "./tabs/Soon";
@@ -7,19 +7,22 @@ import Playing from "./tabs/Playing";
 import NotFound from "./tabs/NotFound";
 import Modal from "./tabs/Modal";
 
+
 export const router = createBrowserRouter([
+  
   {
     path: "/",
     element: <App />,
     children:[
       {
+   
         path:"",
         element:<Home />,
         errorElement:<ErrorComponent />,
         children:[
           {
-            path:"detail",
-            element:<Modal  />,
+            path:"detail/:id",
+            element:<Modal />,
             errorElement:<ErrorComponent />,
           },
         ],

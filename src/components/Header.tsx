@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useMatch} from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -11,11 +11,10 @@ const Container = styled.div`
   margin: 50px 0;
   font-size: 25px;
   font-weight: bold;
-  li{
+  li a{
     position: relative;
     width:200px;
     text-align: center;
-    
   }
  }
 `;
@@ -33,21 +32,22 @@ transform: translateX(-50%);
 
 
 function Header(){
-  const [x, setX] = useState(0);
-
+  const homeMatch = useMatch("/");
+  const soonMatch = useMatch("/coming-soon");
+  const playingMatch = useMatch("/now-playing");
   
 return(
 <Container>
   <ul>
     <li>
-      <Link to={"/"} onClick={()=>setX(0)}>POPULAR</Link> 
-      <Span animate={{ x }} transition={{ duration: 0.15 }}/>
+      <Link to={"/"}>POPULAR {homeMatch && <Span layoutId="circle" />}</Link> 
+      
     </li>
     <li>
-      <Link to={"/coming-soon"} onClick={()=>setX(260)}>COMING SOON</Link>
+      <Link to={"/coming-soon"}>COMING SOON {soonMatch && <Span layoutId="circle" />}</Link>
       </li>
     <li>
-      <Link to={"/now-playing"} onClick={()=>setX(510)}>NOW PLAYING</Link>
+      <Link to={"/now-playing"}>NOW PLAYING {playingMatch && <Span layoutId="circle" />}</Link>
       
       </li>
     
