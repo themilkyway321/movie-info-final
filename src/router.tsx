@@ -15,18 +15,15 @@ export const router = createBrowserRouter([
     element: <App />,
     children:[
       {
-   
         path:"",
         element:<Home />,
         errorElement:<ErrorComponent />,
-        children:[
-          {
-            path:"detail/:id",
-            element:<Modal />,
-            errorElement:<ErrorComponent />,
-          },
-        ],
       },
+      {
+        path:"detail/:id",
+        element:<Home />,
+      },
+
       {
         path:"coming-soon",
         element:<Soon />,

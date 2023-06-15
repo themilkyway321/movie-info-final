@@ -4,22 +4,23 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "react-router-dom";
 
-interface Id {
-  id: string;
-};
-function Modal(){
-  const location = useLocation();
-  const  {id}  = useParams();
-  // const {isLoading, data}= useQuery(['detail', id], () => getMovie(id));
- 
+interface IdProps {
+  clickedMovie: string;
+  
+}
+
+function Modal({clickedMovie}:IdProps){
+  const {isLoading, data}= useQuery(['detail', clickedMovie], () => getMovie(clickedMovie));
+  console.log(data, isLoading);
+  console.log(clickedMovie)
   return (
 <div>
 <p>hello</p>
-  {/* {isLoading? <p>"loading.."</p>:(
+  {isLoading? <p>"loading.."</p>:(
         <div>
           {data?.map((e:IMovieDetail)=>e.revenue)}
         </div>
-      )} */}
+      )}
 </div>
   );
 }
