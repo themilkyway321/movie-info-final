@@ -5,7 +5,6 @@ import ErrorComponent from "./components/ErrorComponent";
 import Soon from "./tabs/Soon";
 import Playing from "./tabs/Playing";
 import NotFound from "./tabs/NotFound";
-import Modal from "./tabs/Modal";
 
 
 export const router = createBrowserRouter([
@@ -30,9 +29,18 @@ export const router = createBrowserRouter([
         errorElement:<ErrorComponent />,
       },
       {
+        path:"coming-soon/detail/:id",
+        element:<Soon />,
+      },
+      {
         path:"now-playing",
         element:<Playing />,
         errorElement:<ErrorComponent />,
+      },
+      {
+        path:"now-playing/detail/:id",
+        element:<Playing />,
+
       },
       
     ],

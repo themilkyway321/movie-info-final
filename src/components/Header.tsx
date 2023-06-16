@@ -41,14 +41,12 @@ return(
   <ul>
     <li>
       <Link to={"/"}>POPULAR {homeMatch && <Span layoutId="circle" />}</Link> 
-      
     </li>
     <li>
       <Link to={"/coming-soon"}>COMING SOON {soonMatch && <Span layoutId="circle" />}</Link>
       </li>
     <li>
       <Link to={"/now-playing"}>NOW PLAYING {playingMatch && <Span layoutId="circle" />}</Link>
-      
       </li>
     
   </ul>

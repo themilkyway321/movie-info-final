@@ -1,30 +1,29 @@
 import { useQuery } from "react-query";
 import { IMovieDetail, getPopular, getMovie } from "../api";
 import styled from "styled-components";
-import { AnimatePresence, motion,  useAnimationControls, useMotionValueEvent, useScroll } from "framer-motion";
-import { Link, Outlet, useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
+import { AnimatePresence, motion,  useScroll } from "framer-motion";
+import { useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { get } from "http";
-
+import { NumericFormat } from 'react-number-format';
 
 const Body = styled.section`
-height: 200vh;
+width: 100%;
 position: relative;
+display: flex;
+justify-content: center;
 
 `;
 const Container = styled(motion.div)`
 position: absolute;
-left: 50%;
-transform: translateX(-50%);
-
+justify-content: center;
+align-items: center;
 width: 1200px;
 display: grid;
 grid-template-columns: repeat(3, 1fr);
-border: 1px solid yellow;
 row-gap: 100px;
 /* padding: 0 20px; */
 text-align: center;
-
+padding-bottom: 200px;
 `;
 
 const Item = styled(motion.div)`
@@ -44,25 +43,9 @@ const Item = styled(motion.div)`
       font-size:23px;
       font-weight: 500;
     };
-`;
-
-const BigMovie = styled(motion.div)`
-  position:absolute; 
-  width:40vw;
-  height:60vh; 
-  left:0;
-  right:0;
-  margin:auto;
-
-  border-radius: 15px ;
-overflow: hidden;
-`;
-const BigCover = styled.div`
-width: 100%;
-background-size: cover;
-background-position: center center;
-height: 500px;
-
+    :hover{
+      cursor: pointer;
+    } 
 `;
 const Overlay = styled(motion.div)`
 position: fixed;
@@ -72,95 +55,168 @@ height: 100vh;
 background-color:rgba(0,0,0,0.5) ;
 opacity: 0;
 `;
-const BigTitle = styled.h2`
+const BigMovie = styled(motion.div)`
+  position:fixed; 
+  width:1000px;
+  height:70vh; 
+  left:0;
+  right:0;
+  margin:auto;
+  border-radius: 15px ;
+  overflow: hidden;
+  background-color:rgba(0,0,0,0.9) ;
+  
+`;
+const BigCover = styled(motion.div)`
+width: 100%;
+height: 70%;
+background-size: cover;
+background-position: center center;
+`;
 
+const BigTitle = styled.h2`
 font-size: 28px;
 position: relative;
 top: -60px;
-padding: 10px;
+padding: 30px;
 `;
 const BigOverview =styled.p`
 position: relative;
 top: -50px;
-padding: 10px;
+padding: 0 30px;
 `;
-const boxVars = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      duration:0.5,
-      staggerChildren: 0.2
-    },
+
+const BigList = styled.ul`
+position: absolute;
+bottom:0;
+line-height: 1.3em;
+padding: 30px;
+`;
+// const boxVars = {
+//   start:{
+//     y:0,
+//     opacity:1,
+//     scale:1
+//     },
+//   show: { 
+//     transition: { staggerChildren: 0.1 } 
+//     },
+//     hide: { 
+//     transition: { staggerChildren: 0.1, staggerDirection: -1 } 
+//     },
+// };
+// const itemVariants = {
+//   normal:{
+//   y:0,
+//   opacity:1,
+//   scale:1
+//   },
+//   show: { 
+//     y: [200, 0], 
+//     opacity: [0, 1], 
+//     scale: [0.95, 1] 
+//     },
+//     hide: { 
+//     y: [0, 200],
+//     opacity: [1, 0],
+//     scale: [1, 0.95]
+//     },
+// };
+
+const BoxVariants = {
+  normal:{
+    scale:1,
+  },
+  hover:{
+    scale:1.3,
+    transition:{
+      duration:0.3,
+      type:"tween"
+    }
   },
 };
-const itemVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1 }
-};
-
 
 function Home(){
+ 
+  const [leaving, setLeaving]= useState(false);
+  const toggleLeaving =()=>setLeaving((prev)=>!prev);
   const {scrollY}=useScroll();
   const navigate = useNavigate();
-  const controls = useAnimationControls();
   const homeMovieMatch =useMatch("/detail/:id");
   
   const {isLoading :movieLoading, data: movieData}= useQuery("allMovies", getPopular);
   
-  const location = useLocation();
-  const [clicked, setClicked]=useState(false)
-  const toggleClick =()=>setClicked((prev)=>!prev);
+ 
   const onItemClicked =(id:number)=>{
-    navigate(`/detail/${id}`)
+      navigate(`/detail/${id}`,{state: {id}})
+
   };
   const onOverlayClicked =()=>navigate(`/`);
   const clickedMovie = homeMovieMatch?.params.id && movieData?.results.find((e: { id: string; })=>e.id+"" === homeMovieMatch.params.id);
-  const {isLoading :detailLoading, data: detailData}= useQuery("id", ()=>getMovie(clickedMovie));
-  useEffect(() => {
-  controls.start("show");
-  
-  }, [movieLoading]);
+
+useEffect(()=>{
+
+},[])
+
+
+
+  const {id} = useParams();
+  const {data: detailData}= useQuery<IMovieDetail>(["detail", id], ()=>getMovie(id+""));
+
   return(
     <Body>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {movieLoading? <p>"loading..."</p>:(
-        <Container variants={boxVars} initial="hidden" animate={controls}>  
+        <Container>  
           {movieData?.results.map((v:IMovieDetail) =>(
-        <Item
-        variants={itemVariants}
-        
-        key={v.id}
-        layoutId={v.id+""}   
-        onClick={()=>onItemClicked(v.id)}>
-          <img src={`https://image.tmdb.org/t/p/w500${v.backdrop_path}`} />
-          <p key={v.id}>{v.title}</p>
-        </Item>
+          <Item 
+           variants={BoxVariants}
+           whileHover="hover"
+           onClick={()=>onItemClicked(v.id)}
+            layoutId={v.id+""}>
+              <img src={`https://image.tmdb.org/t/p/w500${v.backdrop_path}`} />
+              <p key={v.id}>{v.title}</p>
+            </Item>
         ))}
         </Container> 
         )}
       </AnimatePresence>
      
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
       {homeMovieMatch? 
       (<>
       <Overlay onClick={onOverlayClicked} animate={{opacity:1}} exit={{opacity:0}}/>
-        <BigMovie layoutId={homeMovieMatch.params.id} style={{ top:scrollY.get()+100}}>
+        <BigMovie layoutId={homeMovieMatch.params.id} >
             {clickedMovie &&
             <>
-            <BigCover style={{backgroundImage:`linear-gradient(to top, black, transparent),url(https://image.tmdb.org/t/p/original/${clickedMovie.backdrop_path})` }} />
-            
+            <BigCover initial={{opacity:0}} animate={{opacity:1,transition:{duration:0.3, delay:0.4}}} style={{backgroundImage:`linear-gradient(to top, black, transparent),url(https://image.tmdb.org/t/p/original/${clickedMovie.backdrop_path})` }} />
             <BigTitle>{clickedMovie.title}</BigTitle>
             <BigOverview>{clickedMovie.overview}</BigOverview>
+            <BigList>
+              <li>Budget: <NumericFormat
+                              value={detailData?.budget}
+                              displayType={'text'}
+                              thousandSeparator=","
+                              prefix={'$'}
+                              renderText={(value) => <b>{value}</b>}
+                            />
+              </li>
+              <li> Revenue: <NumericFormat
+                              value={detailData?.revenue}
+                              displayType={'text'}
+                              thousandSeparator=","
+                              prefix={'$'}
+                              renderText={(value) => <b>{value}</b>}
+                            />
+              </li>
+              <li>Runtime: {detailData?.runtime}</li>
+              <li>Rating: {detailData?.vote_average}</li>
+              <li>Homepage: {detailData?.homepage}</li>
+            </BigList>
             </>
             }
         </BigMovie>
-      
-      
       </>):null}
-      
-      
-      
       </AnimatePresence>
      
      
