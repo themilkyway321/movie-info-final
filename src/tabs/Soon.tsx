@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { AnimatePresence, motion,  useScroll } from "framer-motion";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from 'react-number-format';
+import { useState } from "react";
 
 
-const Body = styled.section`
+const Body = styled(motion.section)`
 width: 100%;
 position: relative;
 display: flex;
@@ -102,6 +103,8 @@ const BoxVariants = {
   },
 };
 function Soon(){
+  const [leaving, setLeaving]= useState(false);
+  const toggleLeaving =()=>setLeaving((prev)=>!prev);
   const navigate = useNavigate();
   const soonMovieMatch = useMatch("/coming-soon/detail/:id");
   const {isLoading, data}= useQuery("allComing", getComingSoon);
@@ -114,9 +117,11 @@ const {id} = useParams();
 const {data: detailData}= useQuery<IMovieDetail>(["detail", id], ()=>getMovie(id+""));
   return(
     <Body>
-     <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false} onExitComplete={toggleLeaving}>
         {isLoading? <p>"loading..."</p>:(
-        <Container> {data?.results.map((v:IMovieDetail) =>(
+        <Container
+         initial={{x:600,}}
+              animate={{x:0,transition:{duration:0.3,delayChildren:0.5,staggerChildren:0.5}}}> {data?.results.map((v:IMovieDetail) =>(
         <Item
           variants={BoxVariants}
           whileHover="hover"

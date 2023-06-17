@@ -107,7 +107,7 @@ function Playing(){
   const onItemClicked =(id:number)=>{ 
     navigate(`/now-playing/detail/${id}`,{state: {id}})
 };
-const onOverlayClicked =()=>navigate(`/coming-soon`);
+const onOverlayClicked =()=>navigate(`/now-playing`);
 const clickedMovie = playingMovieMatch?.params.id && data?.results.find((e: { id: string; })=>e.id+"" === playingMovieMatch.params.id);
 const {id} = useParams();
 const {data: detailData}= useQuery<IMovieDetail>(["detail", id], ()=>getMovie(id+""));
